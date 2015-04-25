@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#
+# A new backup experiment...
+# 4/2015, FMMT666
+# 
+
+if [ $# -lt 3 ]; then
+  echo ""
+  echo "#####"
+  echo "# DO NOT BACKUP LIVE SYSTEMS, BOOT WITH STICK/CD/DVD"
+  echo "#"
+  echo "# asMake7zBak <device_to_backup> <7z_file_to_save>"
+  echo "# asMake7zBak /dev/sda /mnt/BACKUP/Bak_2015_04_01"
+  echo "#"
+  echo "# Safety First:"
+  echo "# Nothing will actually happen until you add a 'RUN'"
+  echo "# to the end of the command line..."
+  echo "#####"
+  echo ""
+fi
+
+
+# add a "7z" extension, if necessary
+if [ "$( echo "$2" | rev | cut -d. -f1 | rev)" == "7z" ]; then
+  FOUT="$2"
+else
+  FOUT="$2".7z
+fi
+
+
+CMDBAK="sudo dd if=$1 bs=1024k | 7zr a -mx2 -si $FOUT"
+
+
+# -----------
+# MAKE BACKUP
+if [ "$3" == "RUN" ]; then
+
+  ( while ( true ); do ls -la --color -h "$FOUT"; sleep 1; done ) &
+
+  SECONDS=0
+  eval $CMDBAK
+  echo "That took ${SECONDS}s"
+
+  kill $!
+
+else
+
+  lsblk
+  echo ""
+  echo "+-----"
+  echo "| IS THIS WHAT YOU WANT?"
+  echo "| $CMDBAK"
+  echo "+-----"
+
+fi
+
