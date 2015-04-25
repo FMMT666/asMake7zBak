@@ -2,8 +2,13 @@
 asMake7zBak
 ===========
 
-A full-disk backup experiment.
+A full-disk backup helper script and experiment.  
 Uses 7zr to compress dd's output.
+
+Basically, this is nothing more but a
+
+    dump_this_disk <disk> | compress_it > <file>
+
 
 ### Requirements
 
@@ -67,9 +72,24 @@ of the backup file via 'ls':
 
 ### Notes
 
+The default block size for dd is set to 1024kB (bs=1024k).  
+I did not experience any noticeable improvements for larger values.
+
+7zr's compression settings are selected to be 'x=2' (-mx2).  
+This usually results in a (better than) 50% compression ratio for a
+standard desktop PC [...] with fair time consumption.
+
+While 'x=5' (-mx5) would compress even more, your PC will be outdated
+before the backup task finished.
+
+
+### WARNINGS
+
  - Do not backup mounted systems.  
    Boot from an USB stick/drive or a CD/DVD.
+ - Review the command line before adding 'RUN'.
  - ...
+
 
 ### TODO
 
